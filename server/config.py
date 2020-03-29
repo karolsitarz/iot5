@@ -7,5 +7,7 @@ ip = "test.mosquitto.org"
 
 datetime_format = '%Y-%m-%d %H:%M:%S'
 
-file_path = os.path.join(os.path.dirname(__file__), 'store.json')
-db = TinyDB(file_path)
+def file_location(name):
+  return os.path.join(os.path.dirname(__file__), name)
+
+db = TinyDB(file_location("store.json"))

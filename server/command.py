@@ -1,7 +1,8 @@
 import json
+import time
 from datetime import datetime
 from tinydb import Query, where
-from config import db, datetime_format
+from config import db, datetime_format, file_location
 
 
 def terminal(data):
@@ -128,11 +129,40 @@ def login(data):
 
         return string
 
+
+    if data[1] == "save":
+        if len(data) != 3:
+            return "Incorrect argument number! Expected `login save <person-id>`"
+
+        person_id = data[2]
+        search = db.table('people').search(where('id') == person_id)
+        if not search:
+            return "No person with such id!"
+
+        card_id = search[0]["card_id"]
+        if len(card_id) == 0:
+            return "The person doesn't have any card assigned!"
+
+        login_search = logins.search(where('card_id') == card_id)
+
+        timeInMs = int(round(time.time() * 1000))
+        location = file_location("_".join(("logins", person_id, str(timeInMs))) + '.csv')
+
+        f = open(location, "w+")
+        f.write("time" + "," + "terminal id" + "\n")
+        for l in login_search:
+            string = datetime.utcfromtimestamp(l["time"]).strftime(datetime_format)
+            string += "," + l["terminal_id"] + "\n"
+            f.write(string)
+        f.close()
+
+        return "File saved to " + location
+
     return "No such command!"
 
 
 def command():
-    print("> ", end="")
+    print("\n> ", end="")
     data = input().split()
 
     if len(data) == 0:
