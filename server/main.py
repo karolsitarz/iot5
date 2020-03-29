@@ -34,9 +34,9 @@ def on_message(client, userdata, msg):
         print("New card registered with id ", data["card_id"])
 
     logins = db.table('logins')
-    t = time.time() * 1000.0
-    logins.insert({ 'time:': t, 'card_id': data["card_id"] })
-    print("New login from", data["card_id"], "at", t)
+    t = time.time()
+    logins.insert({ 'time': t, 'card_id': data["card_id"], 'terminal_id': data["terminal_id"] })
+    print("New", data["card_id"], "login from", data["terminal_id"], "at", t)
 
 
 def main():
