@@ -47,9 +47,9 @@ def main():
     client.loop_start()
     client.subscribe(topic)
 
-    # wait until client is connected, temporary solution
+    # wait until client is connected
     while not client.is_connected:
-        pass
+        time.sleep(1)
 
     # expect a cli command
     command()

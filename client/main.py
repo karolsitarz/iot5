@@ -13,6 +13,7 @@ def readTerminalId():
         s = open(file_path, mode='r', encoding="utf-8")
         terminal_id = s.read(8)
         s.close()
+        print('Using terminal_id -', terminal_id)
         return terminal_id
     except Exception as exc:
         print("File open error:", exc)
@@ -25,12 +26,14 @@ def main():
 
     client.connect(ip)
 
+    while not client.is_connected:
+        time.sleep(1)
+
     while True:
-        if not client.is_connected:
-            time.sleep(1)
-            continue
         data = input()
-        if data == "exit" or len(data) == 0:
+        if len(data) == 0:
+            continue
+        if data == "exit":
             break
 
         client.publish(topic, json.dumps({ 'card_id': data, 'terminal_id': terminal_id }))

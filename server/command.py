@@ -135,8 +135,8 @@ def command():
     print("> ", end="")
     data = input().split()
 
-    if len(data) == 0 or data[0] == "exit":
-        return
+    if len(data) == 0:
+        return command()
 
     if data[0] == "terminal":
         print(terminal(data))
@@ -153,6 +153,9 @@ def command():
     if data[0] == "login":
         print(login(data))
         return command()
+
+    if data[0] == "exit":
+        return
 
     print("Available commands:", "terminal", "card", "person", "login", "exit", sep="\n\t")
     return command()
