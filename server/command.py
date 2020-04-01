@@ -54,7 +54,7 @@ def cards(data):
 def person(data):
     people = db.table('people')
     if len(data) == 1:
-        return "\n\t".join(("Available subcommands:", "list", "add <person-id> <name>", "remove <person-id>", "assign <person-id> <card-id>"))
+        return "\n\t".join(("Available subcommands:", "list", "add <person-id> <name>", "remove <person-id>", "assign <person-id> <card-id>", "clear <person-id>"))
 
     if data[1] == "list":
         return '\n'.join(p['id'] + "\t" + p['name'] + "\t" + p['card_id'] for p in people)
@@ -97,6 +97,18 @@ def person(data):
                 return "Person got the card assigned successfully!"
 
             return "No such card exists!"
+
+        return "No such person exists!"
+
+    if data[1] == "clear":
+        if len(data) != 3:
+            return "Incorrect argument number! Expected `person clear <person-id>`"
+
+        person_id = data[2]
+        search = people.search(where('id') == person_id)
+        if search:
+            people.update({ 'card_id': '' }, where('id') == person_id)
+            return "Person card cleared successfully!"
 
         return "No such person exists!"
 
